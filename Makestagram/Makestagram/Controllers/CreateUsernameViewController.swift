@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseDatabase
 
 class CreateUsernameViewController: UIViewController {
     
@@ -18,6 +20,18 @@ class CreateUsernameViewController: UIViewController {
     }
     
     @IBAction func nextButtonTapped(_ sender: UIButton) {
-        
+            let username = usernameTextField.text,
+            !username.isEmpty else { return }
+        UserService.create(firUser, username: username) { (user) in
+            guard let user = user else { return }
+            
+            User.setCurrent(user)
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: .main)
+            if let initialViewController = storyboard.instantiateInitialViewController() {
+                self.view.window?.rootViewController = initialViewController
+                self.view.window?.makeKeyAndVisible()
+            }
+        }
     }
 }
